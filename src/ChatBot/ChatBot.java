@@ -14,13 +14,6 @@ class ChatBot {
         end();
     }
 
-    private static void end() {
-    }
-
-    private static void test() {
-    }
-
-
 
     private static void greet(String assistantName, String birthYear) {
         System.out.println("Hello! My name is " + assistantName + ".");
@@ -48,6 +41,23 @@ class ChatBot {
         for (int i = 0; i <= num; i++) {
             System.out.printf("%d!\n", i);
         }
+    }
 
+    private static void test() {
+        System.out.println("Let's test your programming knowledge.");
+        System.out.println("Why do we use methods?");
+        System.out.println("1. To repeat a statement multiple times.\n" +
+                "2. To decompose a program into several small subroutines.\n" +
+                "3. To determine the execution time of a program.\n" +
+                "4. To interrupt the execution of a program.");
+        int ans = scanner.nextInt();
+        while (ans != 2){
+            System.out.println("Please, try again.");
+            ans = scanner.nextInt();
+        }
+    }
+
+    private static void end() {
+        System.out.println("Congratulations, have a nice day!"); // Do not change this text
     }
 }
