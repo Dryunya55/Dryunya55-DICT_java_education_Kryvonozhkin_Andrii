@@ -3,17 +3,44 @@ package ChatBot;
 import java.util.Scanner;
 
 class ChatBot {
+    private final static Scanner scanner = new Scanner(System.in);
+
     public static void main(String[] args) {
+        greet("Aboba", "2021");
+        remindName();
+        guessAge();
+        count();
+        test();
+        end();
+    }
 
-        Scanner input = new Scanner(System.in);
+    private static void end() {
+    }
 
-        System.out.print("Hello! My name is Aboba.\n" +
-                "I was created in 2021.\n"+
-                "Please, remind me your name.");
-        String myString  = input.next();
-        System.out.println("What a great name you have, " + myString);
+    private static void test() {
+    }
 
-        // closing the scanner object
-        input.close();
+    private static void count() {
+    }
+
+    private static void greet(String assistantName, String birthYear) {
+        System.out.println("Hello! My name is " + assistantName + ".");
+        System.out.println("I was created in " + birthYear + ".");
+        System.out.println("Please, remind me your name.");
+    }
+
+    private static void remindName() {
+        String name = scanner.nextLine();
+        System.out.println("What a great name you have, " + name + "!");
+    }
+
+    private static void guessAge() {
+        System.out.println("Let me guess your age.");
+        System.out.println("Say me remainders of dividing your age by 3, 5 and 7.");
+        int rem3 = scanner.nextInt();
+        int rem5 = scanner.nextInt();
+        int rem7 = scanner.nextInt();
+        int age = (rem3 * 70 + rem5 * 21 + rem7 * 15) % 105;
+        System.out.println("Your age is " + age + "; that's a good time to start programming!");
     }
 }
