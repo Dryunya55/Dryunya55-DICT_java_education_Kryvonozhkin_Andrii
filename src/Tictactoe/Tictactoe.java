@@ -1,7 +1,25 @@
 package Tictactoe;
 
 import java.util.Arrays;
+import java.util.InputMismatchException;
 import java.util.Scanner;
+
+class OutBoundsMoveException extends Exception {}
+
+class OccupiedCoordinateException extends Exception {}
+
+class Coordinates {
+    public final int x;
+    public final int y;
+
+    Coordinates(int x, int y) throws OutBoundsMoveException {
+        if (x < 0 || x > 2 || y < 0 || y > 2) {
+            throw new OutBoundsMoveException();
+        }
+        this.x = x;
+        this.y = y;
+    }
+}
 
 public class Tictactoe {
     public static String[][] getRows(String[] gameState) {
@@ -180,10 +198,44 @@ public class Tictactoe {
         return status;
     }
 
+    public static Coordinates readUserMove() throws OutBoundsMoveException {
+        Scanner scanner = new Scanner(System.in);
+        int y = scanner.nextInt() - 1;
+        int x = scanner.nextInt() - 1;
+        return new Coordinates(x, y);
+    }
+
+    public static void makeUserMove(Coordinates move, String[] gameState) throws OccupiedCoordinateException {
+        String target = gameState[move.y * 3 + move.x];
+
+        if (target.equals("X") || target.equals("O")) {
+            throw new OccupiedCoordinateException();
+        }
+
+        gameState[move.y * 3 + move.x] = "X";
+    }
+
+    public static void processUserMove(String[] gameState) {
+        try {
+            System.out.print("Enter the coordinates: ");
+            Coordinates move = readUserMove();
+            makeUserMove(move, gameState);
+        } catch (OutBoundsMoveException e) {
+            System.out.println("Coordinates should be from 1 to 3!");
+            processUserMove(gameState);
+        } catch (OccupiedCoordinateException e) {
+            System.out.println("This cell is occupied! Choose another one!");
+            processUserMove(gameState);
+        } catch (InputMismatchException e) {
+            System.out.println("You should enter numbers!");
+            processUserMove(gameState);
+        }
+    }
+
     public static void main(String[] args) {
         String[] gameState = readGameState();
         printBoard(gameState);
-        String status = getStatus(gameState);
-        System.out.println(status);
+        processUserMove(gameState);
+        printBoard(gameState);
     }
 }
