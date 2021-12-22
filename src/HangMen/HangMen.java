@@ -3,35 +3,56 @@ package HangMen;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+
 public class HangMen {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
-        StringBuffer buffer = new StringBuffer("");
         StringBuffer user_word = new StringBuffer("");
         System.out.println("HANGMAN");
         ArrayList<String> lst = new ArrayList<>();
+        ArrayList<String> storage = new ArrayList<>();
         lst.add("python");
         lst.add("java");
         lst.add("javascript");
         lst.add("kotlin");
         String word = lst.get(new Random().nextInt(lst.size()));
-        int repeat = 0;
-        buffer.append(word);
-        StringBuffer help = buffer.delete(2, buffer.length());
-        for (int i = 1; i <= word.length() - 2; i++) help.append("-");
-        while (repeat != 8) {
-            System.out.println("Guess the word" + " " + help + ":");
-            int heart = 8;
-            for (int i = 1; i <= word.length(); i++) user_word.append("-");
-            while (heart != 0) {
-                System.out.println(user_word);
-                System.out.println("Input a letter:");
-                String user = input.nextLine();
-                if (word.equals(user)) {
-                    System.out.println("You survived!");
-                    break;
-                    int index = word.indexOf(user);
-                    if (index >= 0) {
+        int heart = 8;
+        for (int i = 1; i <= word.length(); i++) user_word.append("-");
+        while (heart != 0) {
+            System.out.println("\n" + user_word);
+            System.out.println("Input a letter:");
+            String user = input.nextLine();
+            int index = word.indexOf(user);
+//            System.out.println(check);
+            Pattern pattern = Pattern.compile("[a-z]");
+            Matcher matcher = pattern.matcher(user);
+
+            if (index < 0 || storage.contains(user)) {
+                if (storage.contains(user)) {
+                    System.out.println("No improvements");
+                } else {
+                    System.out.println("Than letter doesn't appear in the word");
+                    if (index < 0 || storage.contains(user) || (index == 0 && user.length() == 0)) {
+                        if (user.length() != 1) {                  // проверка на ввод одной буквы
+                            System.out.println("You should input a single letter");
+                        } else if (!matcher.matches()) {           // проверка на ввод только маленьких букв
+                            System.out.println("Please enter a lowercase English letter");
+                        } else if (storage.contains(user)) {       // проверка на повторение
+                            System.out.println("You already guessed this letter");
+                        } else {
+                            System.out.println("That letter doesn't appear in the word");
+                            heart--;
+                        }
+                        storage.add(user);
+                        heart--;
+//
+
+                    } else {
+//                boolean check_storage = storage.contains(user);
+                        storage.add(user);
                         if (user.equals("a")) {
                             user_word.insert(index, user);
                             user_word.delete(index + 1, index + 2);
@@ -41,14 +62,16 @@ public class HangMen {
                             user_word.insert(index, user);
                             user_word.delete(index + 1, index + 2);
                         }
-                    } else {
-                        System.out.println("You lost!");
-                        repeat++;
-                        System.out.println("Than letter doesn't appear in the word");
+                        if (word.contains(user_word)) {
+                            System.out.println(user_word + "\nYou guessed the word!\nYou survived!");
+                            System.out.println(user_word + "\nYou guessed the word " + user_word + "!\nYou survived!");
+                            break;
+                        }
                     }
-                    heart--;
                 }
-                System.out.println("Thanks for playing!\nWe'll see how well you did in the next stage");
+                if (0 >= heart) {
+                    System.out.println("You lost!");
+                }
             }
         }
     }
