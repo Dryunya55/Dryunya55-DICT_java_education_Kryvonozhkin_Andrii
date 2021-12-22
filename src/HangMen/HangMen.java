@@ -1,8 +1,17 @@
-package HangMen;
+import java.util.Objects;
+import java.util.Scanner;
 
-public class HangMen {
+
+class Hangmen {
     public static void main(String[] args) {
-        System.out.println("HANGMAN\n" +
-                "The game will be available soon.");
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("HANGMAN");
+
+        String user = scanner.nextLine();
+        if (Objects.equals(user, "java")){
+            System.out.println("You survived!");
+        } else{
+            System.out.println("You lost!");
+        }
     }
 }
