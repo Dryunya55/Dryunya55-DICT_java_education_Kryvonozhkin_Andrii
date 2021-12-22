@@ -1,17 +1,38 @@
+package HangMen;
+
 import java.util.Objects;
+import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Random;
 
 
-class Hangmen {
+public class HangMen {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        Scanner input = new Scanner(System.in);
         System.out.println("HANGMAN");
-
-        String user = scanner.nextLine();
-        if (Objects.equals(user, "java")){
+        String user = input.nextLine();
+        if (Objects.equals(user, "java")) {
             System.out.println("You survived!");
-        } else{
+        } else {
             System.out.println("You lost!");
+            ArrayList<String> lst = new ArrayList<>();
+            lst.add("python");
+            lst.add("java");
+            lst.add("javascript");
+            lst.add("kotlin");
+
+            String word = lst.get(new Random().nextInt(lst.size()));
+            int repeat = 0;
+            while (repeat != 8) {
+                String users = input.nextLine();
+                if (word.equals(users)) {
+                    System.out.println("You survived!");
+                    break;
+                } else {
+                    System.out.println("You lost!");
+                    repeat++;
+                }
+            }
         }
     }
 }
