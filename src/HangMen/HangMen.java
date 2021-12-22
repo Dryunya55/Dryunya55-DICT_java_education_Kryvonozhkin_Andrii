@@ -1,62 +1,77 @@
 package HangMen;
 
-import java.util.ArrayList;
-import java.util.Scanner;
-import java.util.Random;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class Hangman {
     public static void main(String[] args) {
-        Scanner input = new Scanner(System.in);
-        StringBuffer user_word = new StringBuffer("");
         System.out.println("HANGMAN");
-        ArrayList<String> lst = new ArrayList<>();
-        ArrayList<String> storage = new ArrayList<>();
-        lst.add("python");
-        lst.add("java");
-        lst.add("javascript");
-        lst.add("kotlin");
-        String word = lst.get(new Random().nextInt(lst.size()));
-        int heart = 8;
-        for (int i = 1; i <= word.length(); i++) user_word.append("-");
-        while (heart != 0) {
-            System.out.println(user_word);
-            System.out.println("\n" + user_word);
-            System.out.println("Input a letter:");
-            String user = input.nextLine();
-            int index = word.indexOf(user);
-            if (index >= 0) {
-                if (index < 0 || storage.contains(user)) {
-                    if (storage.contains(user)) {
-                        System.out.println("No improvements");
-                    } else {
-                        System.out.println("Than letter doesn't appear in the word");
-                    }
-                    storage.add(user);
-                    heart--;
+        List<String> words = Arrays.asList("python", "java", "javascript", "kotlin");
+        Scanner scanner = new Scanner(System.in);
+        ArrayList<String> past_word = new ArrayList<>();
+        String word = words.get(new Random().nextInt(words.size()));
+        int attempts = 8;
 
+        while (true) {
+            StringBuffer guess = new StringBuffer();
+            guess.append("-".repeat(word.length()));
+
+            System.out.println("Type \"play\" to play tha game, \"exit\" to exit ");
+            String main_choice = scanner.nextLine();
+            if (main_choice.equals("exit")) {
+                break;
+            } else if (main_choice.equals("play")){
+                Play(attempts, guess, word, past_word);
+            }
+        }
+    }
+    public static void Transformation (String user, StringBuffer guess, int index) {
+        if (user.equals("a")) {
+            guess.insert(index, user);
+            guess.delete(index + 1, index + 2);
+            guess.insert(index + 2, user);
+            guess.delete(index + 3, index + 4);
+        } else {
+            guess.insert(index, user);
+            guess.delete(index + 1, index + 2);
+        }
+    }
+
+    public static void Play (int attempts, StringBuffer guess, String word, List<String> past_word) {
+        Scanner scanner = new Scanner(System.in);
+        while (attempts != 0) {
+            System.out.println("\n" + guess);
+            System.out.println("Input a letter:");
+            String user = scanner.nextLine();
+            int index = word.indexOf(user);
+            Pattern pattern = Pattern.compile("[a-z]");
+            Matcher matcher = pattern.matcher(user);
+            if (index < 0 || past_word.contains(user) || (index == 0 && user.length() == 0)) {
+                if (user.length() != 1) {
+                    System.out.println("You should input a single letter");
+                } else if (!matcher.matches()) {
+                    System.out.println("Please enter a lowercase English letter");
+                } else if (past_word.contains(user)) {
+                    System.out.println("You already guessed this letter");
                 } else {
-                    storage.add(user);
-                    if (user.equals("a")) {
-                        user_word.insert(index, user);
-                        user_word.delete(index + 1, index + 2);
-                        user_word.insert(index + 2, user);
-                        user_word.delete(index + 3, index + 4);
-                    } else {
-                        user_word.insert(index, user);
-                        user_word.delete(index + 1, index + 2);
-                    }
-            if (index < 0 || storage.contains(user)) {
-                    System.out.println("Than letter doesn't appear in the word");
-                    if (word.contains(user_word)) {
-                        System.out.println(user_word + "\nYou guessed the word!\nYou survived!");
-                        break;
-                    }
+                    System.out.println("That letter doesn't appear in the word");
+                    attempts--;
                 }
-                heart--;
+                past_word.add(user);
+
+            } else {
+                past_word.add(user);
+                Transformation (user, guess, index);
+                if (word.contains(guess)) {
+                    System.out.println(guess + "\nYou guessed the word " + guess + "!\nYou survived!\n");
+                    break;
+                }
             }
-            System.out.println("Thanks for playing!\nWe'll see how well you did in the next stage");
-            if (0 >= heart) {
-                System.out.println("You lost!");
-            }
+
+        }
+        if (0 >= attempts) {
+            System.out.println("You lost!\n");
         }
     }
 }
